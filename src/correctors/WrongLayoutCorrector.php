@@ -13,7 +13,8 @@ use KeyboardInputCorrection\dictionaries\Dictionary;
 use KeyboardInputCorrection\dictionaries\LayoutDictionary;
 use KeyboardInputCorrection\exceptions\CorrectorException;
 
-class WrongLayoutCorrector extends Corrector {
+class WrongLayoutCorrector extends Corrector
+{
 
     /**
      * @param string $input
@@ -22,22 +23,38 @@ class WrongLayoutCorrector extends Corrector {
      * @return bool
      * @throws \InvalidArgumentException
      */
-    public function validate(string $input, int $targetLanguage = self::LANGUAGE_RU, string $encode = self::DEFAULT_ENCODE): bool {
-
-        if( $encode !== self::DEFAULT_ENCODE && !$this->isEncodeSupported($encode) ) {
-
+    public function validate(
+        string $input,
+        int $targetLanguage = self::LANGUAGE_RU,
+        string $encode = self::DEFAULT_ENCODE
+    ): bool {
+        if ($encode !== self::DEFAULT_ENCODE && !$this->isEncodeSupported($encode)) {
             throw new \InvalidArgumentException($encode . ' unknown');
         }
 
         mb_regex_encoding($encode);
 
-        switch($targetLanguage) {
+        var_dump($this->prepare($input, $encode), mb_ereg_match(
+            '([а-яА-ЯәӘғҒқҚңҢөӨұҰүҮһҺіІ@.$+\-*!#%\^&()=<>\?]+)',
+            $this->prepare($input, $encode)
+        ));
 
+        switch ($targetLanguage) {
             case self::LANGUAGE_RU:
-                return mb_ereg_match('([а-яА-Я@.$+\-*!#%\^&()=<>\?]+)', $this->prepare($input, $encode));
-
+                return mb_ereg_match(
+                    '([а-яА-Я@.$+\-*!#%\^&()=<>\?]+)',
+                    $this->prepare($input, $encode)
+                );
+            case self::LANGUAGE_KK:
+                return mb_ereg_match(
+                    '([а-яА-ЯәӘғҒқҚңҢөӨұҰүҮһҺіІ@.$+\-*!#%\^&()=<>\?]+)',
+                    $this->prepare($input, $encode)
+                );
             case self::LANGUAGE_EN:
-                return mb_ereg_match('([a-zA-Z@.$+\-*!#%\^&()=<>\?]+)', $this->prepare($input, $encode));
+                return mb_ereg_match(
+                    '([a-zA-Z@.$+\-*!#%\^&()=<>\?]+)',
+                    $this->prepare($input, $encode)
+                );
         }
 
         return false;
@@ -52,44 +69,53 @@ class WrongLayoutCorrector extends Corrector {
      * @throws \InvalidArgumentException
      * @throws CorrectorException
      */
-    public function correct(string $input, int $targetLanguage = self::LANGUAGE_RU, string $encode = self::DEFAULT_ENCODE): string {
-
-        if( $encode !== self::DEFAULT_ENCODE && !$this->isEncodeSupported($encode) ) {
-
+    public function correct(
+        string $input,
+        int $targetLanguage = self::LANGUAGE_RU,
+        string $encode = self::DEFAULT_ENCODE
+    ): string {
+        if ($encode !== self::DEFAULT_ENCODE && !$this->isEncodeSupported($encode)) {
             throw new \InvalidArgumentException($encode . ' unknown');
         }
 
-        if( !$this->validate($input, $targetLanguage) ) {
-
+        if (!$this->validate($input, $targetLanguage)) {
             $table = $this->getConversionTable(self::LANGUAGE_EN, $targetLanguage);
             $input = $this->prepare($input, $encode);
             $size = mb_strlen($input, $encode);
             $result = '';
 
-            for( $i = 0; $i < $size; $i++ ) {
-
-                $char = mb_convert_case(mb_substr($input, $i, 1, $encode), MB_CASE_LOWER, $encode);
+            for ($i = 0; $i < $size; $i++) {
+                $char = mb_convert_case(
+                    mb_substr($input, $i, 1, $encode),
+                    MB_CASE_LOWER,
+                    $encode
+                );
 
                 if (strlen($char) > 0) {
                     $result .= $this->processChar($table, $char);
                 }
             }
 
-            return $this->finish($result, $encode);
+            return $this->finish($result, $encode, $encode);
         }
 
         return $input;
     }
 
-    protected function getConversionTable(int $fromLanguage, int $toLanguage): array {
-
-        switch($fromLanguage) {
-
+    /**
+     * @param int $fromLanguage
+     * @param int $toLanguage
+     * @return array
+     */
+    protected function getConversionTable(int $fromLanguage, int $toLanguage): array
+    {
+        switch ($fromLanguage) {
             case self::LANGUAGE_EN:
-                switch($toLanguage) {
-
+                switch ($toLanguage) {
                     case self::LANGUAGE_RU:
                         return LayoutDictionary::en_ru();
+                    case self::LANGUAGE_KK:
+                        return LayoutDictionary::en_kk();
                 }
                 break;
         }

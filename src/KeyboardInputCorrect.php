@@ -50,12 +50,13 @@ class KeyboardInputCorrect {
      * @param string $encode
      * @return string
      */
-    public function correct(string $input, int $targetLanguage = Corrector::LANGUAGE_RU, string $encode = Corrector::DEFAULT_ENCODE): string {
-
+    public function correct(
+        string $input,
+        int $targetLanguage = Corrector::LANGUAGE_RU,
+        string $encode = Corrector::DEFAULT_ENCODE
+    ): string {
         try {
-
             return $this->corrector->correct($input, $targetLanguage, $encode);
-
         } catch(\InvalidArgumentException $e) {
 
         } catch(CorrectorException $e) {

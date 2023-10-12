@@ -13,10 +13,16 @@ use KeyboardInputCorrection\exceptions\UnsupportedSymbolException;
 
 abstract class Corrector extends InputCorrection {
 
+    /**
+     * @var bool
+     */
     protected $throwUnknownSymbols;
 
-    public function __construct($throwUnsupportedSymbols = false) {
-
+    /**
+     * @param bool $throwUnsupportedSymbols
+     */
+    public function __construct(bool $throwUnsupportedSymbols = false)
+    {
         $this->throwUnknownSymbols = $throwUnsupportedSymbols;
     }
 
@@ -27,7 +33,11 @@ abstract class Corrector extends InputCorrection {
      * @return bool
      * @throws \InvalidArgumentException
      */
-    abstract public function validate(string $input, int $targetLanguage = self::LANGUAGE_RU, string $encode = self::DEFAULT_ENCODE): bool;
+    abstract public function validate(
+        string $input,
+        int $targetLanguage = self::LANGUAGE_RU,
+        string $encode = self::DEFAULT_ENCODE
+    ): bool;
 
     /**
      * @param string $input
@@ -37,7 +47,11 @@ abstract class Corrector extends InputCorrection {
      * @throws \InvalidArgumentException
      * @throws CorrectorException
      */
-    abstract public function correct(string $input, int $targetLanguage = self::LANGUAGE_RU, string $encode = self::DEFAULT_ENCODE): string;
+    abstract public function correct(
+        string $input,
+        int $targetLanguage = self::LANGUAGE_RU,
+        string $encode = self::DEFAULT_ENCODE
+    ): string;
 
     /**
      * Throws only if throwUnknownSymbols == true
@@ -46,14 +60,12 @@ abstract class Corrector extends InputCorrection {
      * @return string
      * @throws UnsupportedSymbolException
      */
-    protected function processChar(array &$conversionTable, string $char): string {
-
+    protected function processChar(array &$conversionTable, string $char): string
+    {
         $ok = true;
 
         if( !array_key_exists($char, $conversionTable) ) {
-
             if( $this->throwUnknownSymbols ) {
-
                 throw new UnsupportedSymbolException($char);
             }
 
