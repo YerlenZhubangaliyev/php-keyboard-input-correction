@@ -52,6 +52,7 @@ class KeyboardInputCorrect {
      */
     public function correct(
         string $input,
+        int $fromLanguage = Corrector::LANGUAGE_EN,
         int $targetLanguage = Corrector::LANGUAGE_RU,
         string $encode = Corrector::DEFAULT_ENCODE
     ): string {

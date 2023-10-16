@@ -49,6 +49,7 @@ abstract class Corrector extends InputCorrection {
      */
     abstract public function correct(
         string $input,
+        int $fromLanguage = self::LANGUAGE_EN,
         int $targetLanguage = self::LANGUAGE_RU,
         string $encode = self::DEFAULT_ENCODE
     ): string;

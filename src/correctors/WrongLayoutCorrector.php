@@ -66,6 +66,7 @@ class WrongLayoutCorrector extends Corrector
      */
     public function correct(
         string $input,
+        int $fromLanguage = self::LANGUAGE_EN,
         int $targetLanguage = self::LANGUAGE_RU,
         string $encode = self::DEFAULT_ENCODE
     ): string {
@@ -74,7 +75,7 @@ class WrongLayoutCorrector extends Corrector
         }
 
         if (!$this->validate($input, $targetLanguage)) {
-            $table = $this->getConversionTable(self::LANGUAGE_EN, $targetLanguage);
+            $table = $this->getConversionTable($fromLanguage, $targetLanguage);
             $input = $this->prepare($input, $encode);
             $size = mb_strlen($input, $encode);
             $result = '';
