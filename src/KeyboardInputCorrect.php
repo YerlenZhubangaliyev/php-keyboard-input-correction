@@ -57,7 +57,7 @@ class KeyboardInputCorrect {
         string $encode = Corrector::DEFAULT_ENCODE
     ): string {
         try {
-            return $this->corrector->correct($input, $targetLanguage, $encode);
+            return $this->corrector->correct($input, $fromLanguage, $targetLanguage, $encode);
         } catch(\InvalidArgumentException $e) {
 
         } catch(CorrectorException $e) {
