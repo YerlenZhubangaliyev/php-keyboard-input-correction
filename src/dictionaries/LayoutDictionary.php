@@ -138,4 +138,12 @@ class LayoutDictionary
             '=' => 'һ',
         ];
     }
+
+    /**
+     * @return array
+     */
+    public static function ru_en(): array
+    {
+        return array_flip(self::ru_en());
+    }
 }

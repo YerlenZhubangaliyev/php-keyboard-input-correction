@@ -42,7 +42,7 @@ class WrongLayoutCorrector extends Corrector
                 );
             case self::LANGUAGE_KK:
                 return mb_ereg_match(
-                    '([а-яА-ЯәӘғҒқҚңҢөӨұҰүҮһҺіІ@.$+\-*!#%\^&()=<>\?]+)',
+                    '([а-яА-ЯәӘғҒқҚңҢөӨұҰүҮһҺіІ@.$+_\-*!#%\^&()=<>\?]+)',
                     $this->prepare($input, $encode)
                 );
             case self::LANGUAGE_EN:
@@ -111,6 +111,12 @@ class WrongLayoutCorrector extends Corrector
                         return LayoutDictionary::en_ru();
                     case self::LANGUAGE_KK:
                         return LayoutDictionary::en_kk();
+                }
+                break;
+            case self::LANGUAGE_RU:
+                switch ($toLanguage) {
+                    case self::LANGUAGE_EN:
+                        return LayoutDictionary::ru_en();
                 }
                 break;
         }
